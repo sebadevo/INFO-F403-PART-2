@@ -14,10 +14,6 @@ public class Parser {
         
     };
 
-    public void start(){
-        
-    }
-
     public void getNextToken(){
         try {
             token = lexer.yylex();
@@ -25,6 +21,18 @@ public class Parser {
             e.printStackTrace();
         }
     }
+
+    public void start(){
+        getNextToken();
+        switch (String(token.getValue())){
+
+        }
+        
+
+        }
+    }
+
+    
     
 
 }
