@@ -8,6 +8,8 @@
 %standalone		//Standalone mode
 %xstates YYINITIAL, CO_STATE, co_STATE
 
+%function nextToken
+
 
 // Return value of the program
 %eofval{
