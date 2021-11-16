@@ -17,11 +17,82 @@ public class Parser {
     };
 
 
-    public void start(){
-        switch (token.getValue().toString()){
-
+    public void program(){
+        if (token.getValue().toString() == "BEG"){
+            code(); 
         }
     }
+
+    public void code(){
+        switch (token.getValue().toString()){
+            case "END": 
+            case "ENDIF": 
+            case "ELSE":
+            case "ENDWHILE":
+            case "ENDFOR": 
+            return; 
+        }
+        instList(); 
+    }
+
+    private void instList() {
+        instruction(); 
+        instTail(); 
+    }
+
+
+    private void instTail() {
+        switch (token.getValue().toString()){
+            case "END": 
+            case "ENDIF": 
+            case "ELSE":
+            case "ENDWHILE":
+            case "ENDFOR": 
+            return; 
+        }
+
+        if (token.getValue().toString() == ";"){
+            instList(); 
+        }
+    }
+
+
+    private void instruction() {
+        ifCondition(); 
+        whileCondition(); 
+        assign(); 
+        forCondition();
+        print(); 
+        read(); 
+    }
+
+
+    private void read() {
+    }
+
+
+    private void print() {
+    }
+
+
+    private void forCondition() {
+    }
+
+
+    private void assign() {
+    }
+
+
+    private void whileCondition() {
+    }
+
+
+    private void ifCondition() {
+        if (token.getValue().toString() == ";"){
+            instList(); 
+        }
+    }
+
 
     public void addToken(Symbol symbol){
         if (tokenList == null ){
