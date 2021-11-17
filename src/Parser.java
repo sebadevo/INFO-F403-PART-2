@@ -1,30 +1,20 @@
 package src;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class Parser {
-    private static Lexer lexer;
     private Symbol token;
+    private String tokenString;
     private ArrayList<Symbol> tokenList;
-
-    public Parser(String file){
-        try{
-            lexer = new Lexer(new FileReader(file));
-        }catch (IOException e) {
-            e.printStackTrace();
-        }
-    };
 
 
     public void program(){
-        if (token.getValue().toString() == "BEG"){
+        if (tokenString == "BEG"){
             code(); 
         }
     }
 
     public void code(){
-        switch (token.getValue().toString()){
+        switch (tokenString){
             case "END": 
             case "ENDIF": 
             case "ELSE":
@@ -42,7 +32,7 @@ public class Parser {
 
 
     private void instTail() {
-        switch (token.getValue().toString()){
+        switch (tokenString){
             case "END": 
             case "ENDIF": 
             case "ELSE":
@@ -88,7 +78,7 @@ public class Parser {
 
 
     private void ifCondition() {
-        if (token.getValue().toString() == ";"){
+        if (tokenString == ";"){
             instList(); 
         }
     }
@@ -102,6 +92,10 @@ public class Parser {
         else{
             tokenList.add(symbol);            
         }
+    }
+
+    public void convertToken(Symbol symbol){
+        tokenString = symbol.getValue().toString();
     }
 }
 
