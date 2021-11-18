@@ -1,4 +1,3 @@
-package src;
 public enum LexicalUnit{
     VARNAME,
     NUMBER,

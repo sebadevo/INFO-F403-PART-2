@@ -1,28 +1,37 @@
-package src;
 import java.util.ArrayList;
+
+import javax.sound.sampled.SourceDataLine;
+import javax.swing.plaf.synth.SynthButtonUI;
 
 public class Parser {
     private Symbol token;
-    private String tokenString;
+    private LexicalUnit tokenUnit;
+    private Lexer lexer;
     private ArrayList<Symbol> tokenList;
 
-
-    public void program(){
-        if (tokenString == "BEG"){
-            code(); 
-        }
+    public Parser(Lexer lexer){
+        this.lexer = lexer;
     }
 
-    public void code(){
-        switch (tokenString){
-            case "END": 
-            case "ENDIF": 
-            case "ELSE":
-            case "ENDWHILE":
-            case "ENDFOR": 
-            return; 
+    public boolean program(){
+        getNextToken();
+        if (!tokenUnit.equals(LexicalUnit.BEG)) return syntax_error(token);
+        code();
+        getNextToken();
+        if (!tokenUnit.equals(LexicalUnit.END)) return syntax_error(token);
+    }
+
+    public boolean code(){
+        getNextToken();
+        switch (tokenUnit){
+            case END: return true;
+            case ENDIF: 
+            case ELSE: 
+            case ENDWHILE: 
+            case ENDFOR: getNextToken(); return true;
         }
         instList(); 
+        
     }
 
     private void instList() {
@@ -32,12 +41,13 @@ public class Parser {
 
 
     private void instTail() {
-        switch (tokenString){
-            case "END": 
-            case "ENDIF": 
-            case "ELSE":
-            case "ENDWHILE":
-            case "ENDFOR": 
+        getNextToken();
+        switch (tokenUnit){
+            case END: 
+            case ENDIF: 
+            case ELSE:
+            case ENDWHILE:
+            case ENDFOR: 
             return; 
         }
 
@@ -78,8 +88,8 @@ public class Parser {
 
 
     private void ifCondition() {
-        if (tokenString == ";"){
-            instList(); 
+        if (tokenUnit.equals(LexicalUnit.SEMICOLON)){
+        instList(); 
         }
     }
 
@@ -87,15 +97,32 @@ public class Parser {
     public void addToken(Symbol symbol){
         if (tokenList == null ){
             tokenList = new ArrayList<Symbol>();
-            tokenList.add(symbol);
+            Symbol tok = symbol;
+            tokenList.add(tok);
         }
         else{
-            tokenList.add(symbol);            
+            Symbol tok = symbol;
+            tokenList.add(tok);          
         }
     }
 
-    public void convertToken(Symbol symbol){
-        tokenString = symbol.getValue().toString();
+    public void convertToken(){
+        tokenUnit = token.getType();
+    }
+
+    public void getNextToken(){
+        token = lexer.nextToken();
+        convertToken();
+
+    }
+
+    public void match(String str){
+        
+    }
+
+    public boolean syntax_error(Symbol symbol){
+        System.out.println("error, we soundl't have met : " + symbol.getValue());
+        return false;
     }
 }
 
