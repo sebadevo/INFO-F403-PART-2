@@ -46,12 +46,12 @@ public class Parser {
     private void INSTRUCTION() {
         getNextToken();
         switch (tokenUnit){
-            case IF: IF(); return;
-            case WHILE: WHILE(); return;
-            case VARNAME: ASSIGN(); return;
-            case FOR: FOR(); return;
-            case PRINT: PRINT(); return;
-            case READ: READ(); return;
+            case IF: IF(); break;
+            case WHILE: WHILE(); break;
+            case VARNAME: ASSIGN(); break;
+            case FOR: FOR(); break;
+            case PRINT: PRINT(); break;
+            case READ: READ(); break;
             default:
         }
     }
@@ -67,7 +67,7 @@ public class Parser {
             case ENDFOR: return; 
             case SEMICOLON:
                 match(LexicalUnit.SEMICOLON); INSTLIST();
-                return;
+                break;
             default:
                 syntaxError(token);
                 break;
@@ -84,7 +84,7 @@ public class Parser {
                 match(LexicalUnit.THEN);
                 CODE();
                 TAIL();
-                return;
+                break;
             default:
                 syntaxError(token);
                 break;
@@ -96,12 +96,12 @@ public class Parser {
         switch(tokenUnit){
             case ENDIF:
                 match(LexicalUnit.ENDIF);
-                return;
+                break;
             case ELSE:
                 match(LexicalUnit.ELSE);
                 CODE();
                 match(LexicalUnit.ENDIF);
-                return;
+                break;
             default:
                 syntaxError(token);
                 break;
@@ -117,7 +117,7 @@ public class Parser {
                 match(LexicalUnit.DO);
                 CODE();
                 match(LexicalUnit.ENDWHILE);
-                return;
+                break;
             default:
                 syntaxError(token);
                 break;
@@ -130,10 +130,11 @@ public class Parser {
             case NOT:
                 match(LexicalUnit.NOT); 
                 COND();
-                return;
+                break;
             default:
+                SIMPLECOND();
         }
-        SIMPLECOND();
+        
     }
 
     private void SIMPLECOND(){
@@ -147,13 +148,13 @@ public class Parser {
         switch(tokenUnit){
             case EQUAL:
                 match(LexicalUnit.EQUAL); 
-                return;
+                break;
             case GREATER:
                 match(LexicalUnit.GREATER); 
-                return;  
+                break;  
             case SMALLER:
                 match(LexicalUnit.SMALLER); 
-                return;  
+                break;  
             default:
                 syntaxError(token);
                 break;
@@ -190,12 +191,12 @@ public class Parser {
                 match(LexicalUnit.PLUS); 
                 F();
                 B();
-                return;
+                break;
             case MINUS:
                 match(LexicalUnit.MINUS); 
                 F();
                 B();
-                return;  
+                break;  
             default:
                 syntaxError(token);
                 break;
@@ -234,12 +235,12 @@ public class Parser {
                 match(LexicalUnit.TIMES); 
                 G();
                 D();
-                return;
+                break;
             case DIVIDE:
                 match(LexicalUnit.DIVIDE); 
                 G();
                 D();
-                return;  
+                break;  
             default:
                 syntaxError(token);
                 break;
@@ -252,15 +253,17 @@ public class Parser {
             case MINUS:
                 match(LexicalUnit.MINUS); 
                 G();
-                return;
+                break;
             case LPAREN:
                 match(LexicalUnit.LPAREN); 
                 EXPRARITH();
                 match(LexicalUnit.RPAREN); 
-                return;  
+                break;  
             default:
+                H();
+                break;
         }
-        H();
+
     }
 
     private void H(){
@@ -268,10 +271,10 @@ public class Parser {
         switch(tokenUnit){
             case VARNAME:
                 match(LexicalUnit.VARNAME); 
-                return;
+                break;
             case NUMBER:
                 match(LexicalUnit.NUMBER); 
-                return;  
+                break;  
             default:
                 syntaxError(token);
                 break;
@@ -285,7 +288,7 @@ public class Parser {
                 match(LexicalUnit.VARNAME); 
                 match(LexicalUnit.ASSIGN);
                 EXPRARITH();
-                return; 
+                break; 
             default:
                 syntaxError(token);
                 break;
@@ -306,7 +309,7 @@ public class Parser {
                 match(LexicalUnit.DO);
                 CODE();
                 match(LexicalUnit.ENDFOR);
-                return;
+                break;
             default:
                 syntaxError(token);
                 break;
