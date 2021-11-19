@@ -4,9 +4,9 @@ begin
   read(a) ;
   read(b) ;
   while not b = 0 do
-    c := b ;
+    c := b 
     while a+1 > b do     co computation of modulo
-      a := a-b
+      a := a-b 
     endwhile ;
     b := a ;
     a := c 

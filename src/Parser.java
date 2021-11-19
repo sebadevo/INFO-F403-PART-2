@@ -1,10 +1,12 @@
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Parser {
     private Symbol token;
     private Symbol matched;
     private LexicalUnit tokenUnit;
     private Lexer lexer;
+    private ArrayList<Integer> leftMostD;
 
     public Parser(Lexer lexer){
         this.lexer = lexer;
@@ -14,15 +16,16 @@ public class Parser {
         getNextToken();
         switch (tokenUnit){
             case BEG:
+                addLeftMostD(1);
                 match(LexicalUnit.BEG);
                 CODE(); 
                 match(LexicalUnit.END);
-                return;
+                break;
             default:
                 syntaxError(token); 
                 break;
         }
-
+        System.out.println(leftMostD);
     }
 
     private void CODE(){
@@ -32,30 +35,18 @@ public class Parser {
             case ENDIF: 
             case ELSE: 
             case ENDWHILE: 
-            case ENDFOR: return;  
+            case ENDFOR: addLeftMostD(3); return;  
             default:      
         }
-        INSTLIST(); 
+        addLeftMostD(2);
+        INSTLIST();
     }
 
     private void INSTLIST() {
+        addLeftMostD(4);
         INSTRUCTION(); 
         INSTAIL();
     }
-
-    private void INSTRUCTION() {
-        getNextToken();
-        switch (tokenUnit){
-            case IF: IF(); break;
-            case WHILE: WHILE(); break;
-            case VARNAME: ASSIGN(); break;
-            case FOR: FOR(); break;
-            case PRINT: PRINT(); break;
-            case READ: READ(); break;
-            default:
-        }
-    }
-
 
     private void INSTAIL() {
         getNextToken();
@@ -64,9 +55,11 @@ public class Parser {
             case ENDIF: 
             case ELSE:
             case ENDWHILE:
-            case ENDFOR: return; 
+            case ENDFOR: addLeftMostD(6); return; 
             case SEMICOLON:
-                match(LexicalUnit.SEMICOLON); INSTLIST();
+                addLeftMostD(5);
+                match(LexicalUnit.SEMICOLON); 
+                INSTLIST();
                 break;
             default:
                 syntaxError(token);
@@ -75,10 +68,24 @@ public class Parser {
 
     }
 
+    private void INSTRUCTION() {
+        getNextToken();
+        switch (tokenUnit){
+            case IF: addLeftMostD(7); IF(); break;
+            case WHILE: addLeftMostD(8); WHILE(); break;
+            case VARNAME: addLeftMostD(9); ASSIGN(); break;
+            case FOR: addLeftMostD(10); FOR(); break;
+            case PRINT: addLeftMostD(11); PRINT(); break;
+            case READ: addLeftMostD(12); READ(); break;
+            default:
+        }
+    }
+
     private void IF(){
         getNextToken();
         switch(tokenUnit){
             case IF:
+                addLeftMostD(13); 
                 match(LexicalUnit.IF); 
                 COND();
                 match(LexicalUnit.THEN);
@@ -95,9 +102,11 @@ public class Parser {
         getNextToken();
         switch(tokenUnit){
             case ENDIF:
+                addLeftMostD(14); 
                 match(LexicalUnit.ENDIF);
                 break;
             case ELSE:
+                addLeftMostD(15);   
                 match(LexicalUnit.ELSE);
                 CODE();
                 match(LexicalUnit.ENDIF);
@@ -112,6 +121,7 @@ public class Parser {
         getNextToken();
         switch(tokenUnit){
             case WHILE:
+                addLeftMostD(16); 
                 match(LexicalUnit.WHILE); 
                 COND();
                 match(LexicalUnit.DO);
@@ -128,16 +138,19 @@ public class Parser {
         getNextToken();
         switch(tokenUnit){
             case NOT:
+                addLeftMostD(17); 
                 match(LexicalUnit.NOT); 
                 COND();
                 break;
             default:
+                addLeftMostD(18); 
                 SIMPLECOND();
         }
         
     }
 
     private void SIMPLECOND(){
+        addLeftMostD(19); 
         EXPRARITH();
         COMP();
         EXPRARITH();
@@ -147,12 +160,15 @@ public class Parser {
         getNextToken();
         switch(tokenUnit){
             case EQUAL:
+                addLeftMostD(20); 
                 match(LexicalUnit.EQUAL); 
                 break;
             case GREATER:
+                addLeftMostD(21);
                 match(LexicalUnit.GREATER); 
                 break;  
             case SMALLER:
+                addLeftMostD(22);
                 match(LexicalUnit.SMALLER); 
                 break;  
             default:
@@ -162,11 +178,13 @@ public class Parser {
     }
 
     private void EXPRARITH(){
+        addLeftMostD(23);
         A();
         B();
     }
 
     private void A(){
+        addLeftMostD(24);
         F();
     }
 
@@ -186,13 +204,15 @@ public class Parser {
             case ELSE:
             case ENDFOR:
             case BY:
-            case TO: return;
+            case TO: addLeftMostD(27); return;
             case PLUS:
+                addLeftMostD(25);
                 match(LexicalUnit.PLUS); 
                 F();
                 B();
                 break;
             case MINUS:
+                addLeftMostD(26);
                 match(LexicalUnit.MINUS); 
                 F();
                 B();
@@ -204,11 +224,13 @@ public class Parser {
     }
 
     private void F(){
+        addLeftMostD(28);
         C();
         D();
     }
 
     private void C(){
+        addLeftMostD(29);
         G();
     }
 
@@ -230,13 +252,15 @@ public class Parser {
             case BY:
             case TO: 
             case PLUS:
-            case MINUS: return;
+            case MINUS: addLeftMostD(32);return;
             case TIMES:
+                addLeftMostD(30);
                 match(LexicalUnit.TIMES); 
                 G();
                 D();
                 break;
             case DIVIDE:
+                addLeftMostD(31);
                 match(LexicalUnit.DIVIDE); 
                 G();
                 D();
@@ -251,15 +275,18 @@ public class Parser {
         getNextToken();
         switch(tokenUnit){
             case MINUS:
+                addLeftMostD(33);
                 match(LexicalUnit.MINUS); 
                 G();
                 break;
             case LPAREN:
+                addLeftMostD(34);
                 match(LexicalUnit.LPAREN); 
                 EXPRARITH();
                 match(LexicalUnit.RPAREN); 
                 break;  
             default:
+                addLeftMostD(35);
                 H();
                 break;
         }
@@ -270,9 +297,11 @@ public class Parser {
         getNextToken();
         switch(tokenUnit){
             case VARNAME:
+                addLeftMostD(36);
                 match(LexicalUnit.VARNAME); 
                 break;
             case NUMBER:
+                addLeftMostD(37);
                 match(LexicalUnit.NUMBER); 
                 break;  
             default:
@@ -285,6 +314,7 @@ public class Parser {
         getNextToken();
         switch(tokenUnit){
             case VARNAME:
+                addLeftMostD(38);
                 match(LexicalUnit.VARNAME); 
                 match(LexicalUnit.ASSIGN);
                 EXPRARITH();
@@ -298,6 +328,7 @@ public class Parser {
         getNextToken();
         switch(tokenUnit){
             case FOR:
+                addLeftMostD(39);
                 match(LexicalUnit.FOR); 
                 match(LexicalUnit.VARNAME); 
                 match(LexicalUnit.FROM); 
@@ -316,12 +347,14 @@ public class Parser {
         }
     }
     private void PRINT(){
+        addLeftMostD(40);
         match(LexicalUnit.PRINT);
         match(LexicalUnit.LPAREN); 
         match(LexicalUnit.VARNAME); 
         match(LexicalUnit.RPAREN); 
     }
     private void READ(){
+        addLeftMostD(41);
         match(LexicalUnit.READ);
         match(LexicalUnit.LPAREN); 
         match(LexicalUnit.VARNAME); 
@@ -330,6 +363,13 @@ public class Parser {
 
     private void convertToken(){
         tokenUnit = token.getType();
+    }
+
+    private void addLeftMostD(int i) {
+        if (leftMostD == null){
+            leftMostD = new ArrayList<Integer>();
+        }
+        leftMostD.add(i);
     }
 
     private void getNextToken(){
@@ -347,7 +387,7 @@ public class Parser {
         if (matched!=null){getNextToken();}
         System.out.println(token.getValue());
         if (!expected.equals(tokenUnit)){
-            print("expected :" + expected + "got : " + tokenUnit);
+            print("expected : " + expected + " got : " + tokenUnit);
             syntaxError(token);
         }
         matched = token;
@@ -357,6 +397,7 @@ public class Parser {
         System.err.println("An error occured when reading the token : " + symbol.getValue());
         System.exit(1);
     }
+
 
     private void print(String str){
         System.out.println(str);

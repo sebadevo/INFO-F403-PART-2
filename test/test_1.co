@@ -5,22 +5,26 @@ CO
 
 begin
     if seb < b then
-        c := -5
+        c := -5 ;
         if c = b then
             c := b + a ;
-            d := 6;     co we sticked a semicolon
-            print(d);
-        endif
-    endif
+            d := 6  ;    co we sticked a semicolon
+            print(d)
+        endif ;
+    endif ;
     e := c * b ;
-    f := c*b; CO all is sticked together co check if the co is ignored CO
-    if f not = e then 
-        c / by a ;
-    else then
-        g from alphabet ;
-    endif
+    f := c*b ; CO all is sticked together co check if the co is ignored CO
+    if not f = e then 
+        c := b / a ;
+    else
+        g := alphabet ;
+    endif;
     while a-3 < b do
-        a to r
+        a := a + r;
     endwhile ;
+
+    for a from alphabet by b to c do 
+        d := a+b
+    endfor;
 end
 
