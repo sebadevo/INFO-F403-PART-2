@@ -1,14 +1,11 @@
 import java.io.FileReader;
 import java.io.FileNotFoundException;
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.io.IOException;
 
-import java.util.ArrayList;
-import java.util.Collections;
+
 import java.util.TreeMap;
 
-import java.util.List;
+
 import java.util.Map;
 
 /**
@@ -50,7 +47,7 @@ public class Main{
          * 
          */
         final Parser parser = new Parser(analyzer);
-        parser.program();
+        parser.PROGRAM();
         /**
          * The variables, sorted in a TreeMap, which maps the name of the variable to its corresponding Symbol.
          */

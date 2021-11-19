@@ -9,7 +9,7 @@ begin
       a := a-b
     endwhile ;
     b := a ;
-    a := c
+    a := c 
   endwhile ;
   print(a)
 end
