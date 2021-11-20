@@ -48,7 +48,7 @@ public class Parser {
             case ENDWHILE: 
             case ENDFOR: 
                 addLeftMostD(3);
-                chdn.add(new ParseTree(new Symbol("Epsilon" )));
+                chdn.add(new ParseTree(new Symbol("$\\varepsilon$" )));
                 ParseTree parseTree = new ParseTree(new Symbol("Code"), chdn);
                 return parseTree;
             default:      
@@ -78,7 +78,7 @@ public class Parser {
             case ENDWHILE:
             case ENDFOR: 
                 addLeftMostD(6);
-                chdn.add(new ParseTree(new Symbol("Epsilon")));
+                chdn.add(new ParseTree(new Symbol("$\\varepsilon$")));
                 ParseTree parseTree = new ParseTree(new Symbol("InsTail"), chdn);
                 return parseTree;
             case SEMICOLON:
@@ -261,7 +261,7 @@ public class Parser {
             case BY:
             case TO: 
                 addLeftMostD(27);
-                chdn.add(new ParseTree(new Symbol("Epsilon")));
+                chdn.add(new ParseTree(new Symbol("$\\varepsilon$")));
                 ParseTree parseTree = new ParseTree(new Symbol("B"), chdn);
                 return parseTree;
             case PLUS:
@@ -322,7 +322,7 @@ public class Parser {
             case PLUS:
             case MINUS:
                 addLeftMostD(32);
-                chdn.add(new ParseTree(new Symbol("Epsilon")));
+                chdn.add(new ParseTree(new Symbol("$\\varepsilon$")));
                 ParseTree parseTree = new ParseTree(new Symbol("D"), chdn);
                 return parseTree;
             case TIMES:

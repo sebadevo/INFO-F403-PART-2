@@ -61,7 +61,7 @@ public class ParseTree {
     public String toTikZ() {
         StringBuilder treeTikZ = new StringBuilder();
         treeTikZ.append("node {");
-        treeTikZ.append(label);
+        treeTikZ.append(label.getLateXType());
         treeTikZ.append("}\n");
         for (ParseTree child : children) {
             treeTikZ.append("child { ");
