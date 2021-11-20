@@ -26,18 +26,18 @@ public class Parser {
             case BEG:
                 addLeftMostD(1);
                 chdn.add(match(LexicalUnit.BEG));
-                CODE(); 
-                match(LexicalUnit.END);
+                chdn.add(CODE()); 
+                chdn.add(match(LexicalUnit.END));
                 break;
             default:
                 syntaxError(token); 
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol(LexicalUnit.)))
-        return 
+        ParseTree parseTree = new ParseTree(new Symbol("<Program>"), chdn);
+        return parseTree;
     }
 
-    private void CODE(){
+    private ParseTree CODE(){
         getNextToken();
         switch (tokenUnit){
             case END: 
