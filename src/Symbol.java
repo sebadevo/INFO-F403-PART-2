@@ -15,9 +15,13 @@ public class Symbol{
 		this.value	= value;
 		this.name = name;
 	}
-	
+
+	public Symbol(LexicalUnit unit,int line,int column,Object value){
+		this(unit,line,column,value ,NO_NAME);
+	}
+
 	public Symbol(LexicalUnit unit,int line,int column){
-		this(unit,line,column,NO_VALUE ,null);
+		this(unit,line,column,NO_VALUE ,NO_NAME);
 	}
 	
 	public Symbol(LexicalUnit unit,int line){
@@ -33,7 +37,7 @@ public class Symbol{
 	}
 	
 	public Symbol(String name){
-		this(null, UNDEFINED_POSITION, UNDEFINED_POSITION, NO_VALUE, NO_NAME);
+		this(null, UNDEFINED_POSITION, UNDEFINED_POSITION, NO_VALUE, name);
 	}
 
 
@@ -54,6 +58,13 @@ public class Symbol{
 		return this.value;
 	}
 	
+	public String getLateXType(){
+		if(isNonTerminal()){
+			return this.name; 
+		}
+		return this.type.toString();
+	}
+
 	public int getLine(){
 		return this.line;
 	}

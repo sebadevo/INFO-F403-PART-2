@@ -3,11 +3,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
-import java.util.TreeMap;
-
-
-import java.util.Map;
-
 /**
  *
  * Project Part 1: Lexical Analyzer
@@ -41,12 +36,8 @@ public class Main{
          * 
          */
         final Parser parser = new Parser(source);
-        //parser.beginParsing();
-        parser.PROGRAM();
-        /**
-         * The variables, sorted in a TreeMap, which maps the name of the variable to its corresponding Symbol.
-         */
-        TreeMap<String,Symbol> variablesTable = new TreeMap<String,Symbol>();
-        // symbol represents the currently read symbol
+        ParseTree parseTree;
+        parseTree = parser.beginParsing();
+        System.out.println(parseTree.toLaTeX());
     }
 }

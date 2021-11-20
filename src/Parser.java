@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
+
 public class Parser {
     private Symbol token;
     private Symbol matched;
@@ -33,171 +34,216 @@ public class Parser {
                 syntaxError(token); 
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("<Program>"), chdn);
+        ParseTree parseTree = new ParseTree(new Symbol("Program"), chdn);
         return parseTree;
     }
 
     private ParseTree CODE(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch (tokenUnit){
             case END: 
             case ENDIF: 
             case ELSE: 
             case ENDWHILE: 
-            case ENDFOR: addLeftMostD(3); return;  
+            case ENDFOR: 
+                addLeftMostD(3);
+                chdn.add(new ParseTree(new Symbol("Epsilon" )));
+                ParseTree parseTree = new ParseTree(new Symbol("Code"), chdn);
+                return parseTree;
             default:      
         }
         addLeftMostD(2);
-        INSTLIST();
+        chdn.add(INSTLIST());
+        ParseTree parseTree = new ParseTree(new Symbol("Code"), chdn);
+        return parseTree;
     }
 
-    private void INSTLIST() {
+    private ParseTree INSTLIST() {
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(4);
-        INSTRUCTION(); 
-        INSTAIL();
+        chdn.add(INSTRUCTION()); 
+        chdn.add(INSTAIL());
+        ParseTree parseTree = new ParseTree(new Symbol("InstList"), chdn);
+        return parseTree;
     }
 
-    private void INSTAIL() {
+    private ParseTree INSTAIL() {
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch (tokenUnit){
             case END: 
             case ENDIF: 
             case ELSE:
             case ENDWHILE:
-            case ENDFOR: addLeftMostD(6); return; 
+            case ENDFOR: 
+                addLeftMostD(6);
+                chdn.add(new ParseTree(new Symbol("Epsilon")));
+                ParseTree parseTree = new ParseTree(new Symbol("InsTail"), chdn);
+                return parseTree;
             case SEMICOLON:
                 addLeftMostD(5);
-                match(LexicalUnit.SEMICOLON); 
-                INSTLIST();
+                chdn.add(match(LexicalUnit.SEMICOLON)); 
+                chdn.add(INSTLIST());
                 break;
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("InsTail"), chdn);
+        return parseTree;
 
     }
 
-    private void INSTRUCTION() {
+    private ParseTree INSTRUCTION() {
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch (tokenUnit){
-            case IF: addLeftMostD(7); IF(); break;
-            case WHILE: addLeftMostD(8); WHILE(); break;
-            case VARNAME: addLeftMostD(9); ASSIGN(); break;
-            case FOR: addLeftMostD(10); FOR(); break;
-            case PRINT: addLeftMostD(11); PRINT(); break;
-            case READ: addLeftMostD(12); READ(); break;
+            case IF: addLeftMostD(7); chdn.add(IF()); break;
+            case WHILE: addLeftMostD(8); chdn.add(WHILE()); break;
+            case VARNAME: addLeftMostD(9); chdn.add(ASSIGN()); break;
+            case FOR: addLeftMostD(10); chdn.add(FOR()); break;
+            case PRINT: addLeftMostD(11); chdn.add(PRINT()); break;
+            case READ: addLeftMostD(12); chdn.add(READ()); break;
             default:
         }
+        ParseTree parseTree = new ParseTree(new Symbol("Instruction"), chdn);
+        return parseTree;
     }
 
-    private void IF(){
+    private ParseTree IF(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case IF:
                 addLeftMostD(13); 
-                match(LexicalUnit.IF); 
-                COND();
-                match(LexicalUnit.THEN);
-                CODE();
-                TAIL();
+                chdn.add(match(LexicalUnit.IF)); 
+                chdn.add(COND());
+                chdn.add(match(LexicalUnit.THEN));
+                chdn.add(CODE());
+                chdn.add(TAIL());
                 break;
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("If"), chdn);
+        return parseTree;
     }
     
-    private void TAIL(){
+    private ParseTree TAIL(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case ENDIF:
                 addLeftMostD(14); 
-                match(LexicalUnit.ENDIF);
+                chdn.add(match(LexicalUnit.ENDIF));
                 break;
             case ELSE:
                 addLeftMostD(15);   
-                match(LexicalUnit.ELSE);
-                CODE();
-                match(LexicalUnit.ENDIF);
+                chdn.add(match(LexicalUnit.ELSE));
+                chdn.add(CODE());
+                chdn.add(match(LexicalUnit.ENDIF));
                 break;
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("Tail"), chdn);
+        return parseTree;
     }
 
-    private void WHILE(){
+    private ParseTree WHILE(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case WHILE:
                 addLeftMostD(16); 
-                match(LexicalUnit.WHILE); 
-                COND();
-                match(LexicalUnit.DO);
-                CODE();
-                match(LexicalUnit.ENDWHILE);
+                chdn.add(match(LexicalUnit.WHILE)); 
+                chdn.add(COND());
+                chdn.add(match(LexicalUnit.DO));
+                chdn.add(CODE());
+                chdn.add(match(LexicalUnit.ENDWHILE));
                 break;
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("While"), chdn);
+        return parseTree;
     }
     
-    private void COND(){
+    private ParseTree COND(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case NOT:
                 addLeftMostD(17); 
-                match(LexicalUnit.NOT); 
-                COND();
+                chdn.add(match(LexicalUnit.NOT)); 
+                chdn.add(COND());
                 break;
             default:
                 addLeftMostD(18); 
-                SIMPLECOND();
+                chdn.add(SIMPLECOND());
         }
+        ParseTree parseTree = new ParseTree(new Symbol("Cond"), chdn);
+        return parseTree;
         
     }
 
-    private void SIMPLECOND(){
+    private ParseTree SIMPLECOND(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(19); 
-        EXPRARITH();
-        COMP();
-        EXPRARITH();
+        chdn.add(EXPRARITH());
+        chdn.add(COMP());
+        chdn.add(EXPRARITH());
+        ParseTree parseTree = new ParseTree(new Symbol("SimpleCond"), chdn);
+        return parseTree;
     }
 
-    private void COMP(){
+    private ParseTree COMP(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case EQUAL:
                 addLeftMostD(20); 
-                match(LexicalUnit.EQUAL); 
+                chdn.add(match(LexicalUnit.EQUAL)); 
                 break;
             case GREATER:
                 addLeftMostD(21);
-                match(LexicalUnit.GREATER); 
+                chdn.add(match(LexicalUnit.GREATER)); 
                 break;  
             case SMALLER:
                 addLeftMostD(22);
-                match(LexicalUnit.SMALLER); 
+                chdn.add(match(LexicalUnit.SMALLER)); 
                 break;  
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("Comp"), chdn);
+        return parseTree;
     }
 
-    private void EXPRARITH(){
+    private ParseTree EXPRARITH(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(23);
-        A();
-        B();
+        chdn.add(A());
+        chdn.add(B());
+        ParseTree parseTree = new ParseTree(new Symbol("ExprArith"), chdn);
+        return parseTree;
     }
 
-    private void A(){
+    private ParseTree A(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(24);
-        F();
+        chdn.add(F());
+        ParseTree parseTree = new ParseTree(new Symbol("A"), chdn);
+        return parseTree;
     }
 
-    private void B(){
+    private ParseTree B(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case EQUAL:
@@ -213,37 +259,50 @@ public class Parser {
             case ELSE:
             case ENDFOR:
             case BY:
-            case TO: addLeftMostD(27); return;
+            case TO: 
+                addLeftMostD(27);
+                chdn.add(new ParseTree(new Symbol("Epsilon")));
+                ParseTree parseTree = new ParseTree(new Symbol("B"), chdn);
+                return parseTree;
             case PLUS:
                 addLeftMostD(25);
-                match(LexicalUnit.PLUS); 
-                F();
-                B();
+                chdn.add(match(LexicalUnit.PLUS)); 
+                chdn.add(F());
+                chdn.add(B());
                 break;
             case MINUS:
                 addLeftMostD(26);
-                match(LexicalUnit.MINUS); 
-                F();
-                B();
+                chdn.add(match(LexicalUnit.MINUS)); 
+                chdn.add(F());
+                chdn.add(B());
                 break;  
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("B"), chdn);
+        return parseTree;
     }
 
-    private void F(){
+    private ParseTree F(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(28);
-        C();
-        D();
+        chdn.add(C());
+        chdn.add(D());
+        ParseTree parseTree = new ParseTree(new Symbol("F"), chdn);
+        return parseTree;
     }
 
-    private void C(){
+    private ParseTree C(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(29);
-        G();
+        chdn.add(G());
+        ParseTree parseTree = new ParseTree(new Symbol("C"), chdn);
+        return parseTree;
     }
 
-    private void D(){
+    private ParseTree D(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case EQUAL:
@@ -261,113 +320,136 @@ public class Parser {
             case BY:
             case TO: 
             case PLUS:
-            case MINUS: addLeftMostD(32);return;
+            case MINUS:
+                addLeftMostD(32);
+                chdn.add(new ParseTree(new Symbol("Epsilon")));
+                ParseTree parseTree = new ParseTree(new Symbol("D"), chdn);
+                return parseTree;
             case TIMES:
                 addLeftMostD(30);
-                match(LexicalUnit.TIMES); 
-                G();
-                D();
+                chdn.add(match(LexicalUnit.TIMES)); 
+                chdn.add(G());
+                chdn.add(D());
                 break;
             case DIVIDE:
                 addLeftMostD(31);
-                match(LexicalUnit.DIVIDE); 
-                G();
-                D();
+                chdn.add(match(LexicalUnit.DIVIDE)); 
+                chdn.add(G());
+                chdn.add(D());
                 break;  
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("D"), chdn);
+        return parseTree;
     }
 
-    private void G(){
+    private ParseTree G(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case MINUS:
                 addLeftMostD(33);
-                match(LexicalUnit.MINUS); 
-                G();
+                chdn.add(match(LexicalUnit.MINUS)); 
+                chdn.add(G());
                 break;
             case LPAREN:
                 addLeftMostD(34);
-                match(LexicalUnit.LPAREN); 
-                EXPRARITH();
-                match(LexicalUnit.RPAREN); 
+                chdn.add(match(LexicalUnit.LPAREN)); 
+                chdn.add(EXPRARITH());
+                chdn.add(match(LexicalUnit.RPAREN)); 
                 break;  
             default:
                 addLeftMostD(35);
-                H();
+                chdn.add(H());
                 break;
         }
-
+        ParseTree parseTree = new ParseTree(new Symbol("G"), chdn);
+        return parseTree;
     }
 
-    private void H(){
+    private ParseTree H(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case VARNAME:
                 addLeftMostD(36);
-                match(LexicalUnit.VARNAME); 
+                chdn.add(match(LexicalUnit.VARNAME)); 
                 break;
             case NUMBER:
                 addLeftMostD(37);
-                match(LexicalUnit.NUMBER); 
+                chdn.add(match(LexicalUnit.NUMBER)); 
                 break;  
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("H"), chdn);
+        return parseTree;
     }
 
-    private void ASSIGN(){
+    private ParseTree ASSIGN(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case VARNAME:
                 addLeftMostD(38);
-                match(LexicalUnit.VARNAME); 
+                chdn.add(match(LexicalUnit.VARNAME)); 
                 match(LexicalUnit.ASSIGN);
-                EXPRARITH();
+                chdn.add(EXPRARITH());
                 break; 
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("Assign"), chdn);
+        return parseTree;
     }
-    private void FOR(){
+    private ParseTree FOR(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch(tokenUnit){
             case FOR:
                 addLeftMostD(39);
-                match(LexicalUnit.FOR); 
-                match(LexicalUnit.VARNAME); 
-                match(LexicalUnit.FROM); 
-                EXPRARITH();
-                match(LexicalUnit.BY);
-                EXPRARITH();
-                match(LexicalUnit.TO);
-                EXPRARITH();
-                match(LexicalUnit.DO);
-                CODE();
-                match(LexicalUnit.ENDFOR);
+                chdn.add(match(LexicalUnit.FOR)); 
+                chdn.add(match(LexicalUnit.VARNAME)); 
+                chdn.add(match(LexicalUnit.FROM)); 
+                chdn.add(EXPRARITH());
+                chdn.add(match(LexicalUnit.BY));
+                chdn.add(EXPRARITH());
+                chdn.add(match(LexicalUnit.TO));
+                chdn.add(EXPRARITH());
+                chdn.add(match(LexicalUnit.DO));
+                chdn.add(CODE());
+                chdn.add(match(LexicalUnit.ENDFOR));
                 break;
             default:
                 syntaxError(token);
                 break;
         }
+        ParseTree parseTree = new ParseTree(new Symbol("For"), chdn);
+        return parseTree;
     }
-    private void PRINT(){
+    private ParseTree PRINT(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(40);
-        match(LexicalUnit.PRINT);
-        match(LexicalUnit.LPAREN); 
-        match(LexicalUnit.VARNAME); 
-        match(LexicalUnit.RPAREN); 
+        chdn.add(match(LexicalUnit.PRINT));
+        chdn.add(match(LexicalUnit.LPAREN)); 
+        chdn.add(match(LexicalUnit.VARNAME)); 
+        chdn.add(match(LexicalUnit.RPAREN)); 
+        ParseTree parseTree = new ParseTree(new Symbol("Print"), chdn);
+        return parseTree;
     }
-    private void READ(){
+    private ParseTree READ(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(41);
-        match(LexicalUnit.READ);
-        match(LexicalUnit.LPAREN); 
-        match(LexicalUnit.VARNAME); 
-        match(LexicalUnit.RPAREN);
+        chdn.add(match(LexicalUnit.READ));
+        chdn.add(match(LexicalUnit.LPAREN)); 
+        chdn.add(match(LexicalUnit.VARNAME)); 
+        chdn.add(match(LexicalUnit.RPAREN));
+        ParseTree parseTree = new ParseTree(new Symbol("Read"), chdn);
+        return parseTree;
     }
 
     private void convertToken(){
