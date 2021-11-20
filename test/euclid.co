@@ -4,7 +4,7 @@ begin
   read(a) ;
   read(b) ;
   while not b = 0 do
-    c := b 
+    c := b ;
     while a+1 > b do     co computation of modulo
       a := a-b 
     endwhile ;
@@ -13,3 +13,4 @@ begin
   endwhile ;
   print(a)
 end
+a=5

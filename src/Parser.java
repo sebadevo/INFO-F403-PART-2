@@ -1,4 +1,5 @@
 import java.io.IOException;
+import java.io.FileReader;
 import java.util.ArrayList;
 
 public class Parser {
@@ -8,16 +9,23 @@ public class Parser {
     private Lexer lexer;
     private ArrayList<Integer> leftMostD;
 
-    public Parser(Lexer lexer){
-        this.lexer = lexer;
+    public Parser(FileReader source){
+        lexer = new Lexer(source);
     }
 
-    public void PROGRAM(){
+    public ParseTree beginParsing(){
+        ParseTree parseTree = PROGRAM();
+        System.out.println(leftMostD);
+        return parseTree;
+    }
+
+    public ParseTree PROGRAM(){
+        ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch (tokenUnit){
             case BEG:
                 addLeftMostD(1);
-                match(LexicalUnit.BEG);
+                chdn.add(match(LexicalUnit.BEG));
                 CODE(); 
                 match(LexicalUnit.END);
                 break;
@@ -25,7 +33,8 @@ public class Parser {
                 syntaxError(token); 
                 break;
         }
-        System.out.println(leftMostD);
+        ParseTree parseTree = new ParseTree(new Symbol(LexicalUnit.)))
+        return 
     }
 
     private void CODE(){
@@ -383,16 +392,17 @@ public class Parser {
         }
     }
 
-    private void match(LexicalUnit expected){
+    private ParseTree match(LexicalUnit expected){
         if (matched!=null){getNextToken();}
-        System.out.println(token.getValue());
         if (!expected.equals(tokenUnit)){
-            print("expected : " + expected + " got : " + tokenUnit);
             syntaxError(token);
         }
+        ParseTree root = new ParseTree(token);
         matched = token;
+        return root;
     }
 
+    // TODO rajouter le expected.
     private void syntaxError(Symbol symbol){
         System.err.println("An error occured when reading the token : " + symbol.getValue());
         System.exit(1);
@@ -403,4 +413,3 @@ public class Parser {
         System.out.println(str);
     }
 }
-

@@ -1,33 +1,42 @@
 public class Symbol{
 	public static final int UNDEFINED_POSITION = -1;
 	public static final Object NO_VALUE = null;
+	public static final String NO_NAME = null;
 	
 	private final LexicalUnit type;
 	private final Object value;
 	private final int line,column;
+	private final String name;
 
-	public Symbol(LexicalUnit unit,int line,int column,Object value){
+	public Symbol(LexicalUnit unit,int line,int column,Object value, String name){
 		this.type	= unit;
 		this.line	= line+1;
 		this.column	= column;
 		this.value	= value;
+		this.name = name;
 	}
 	
 	public Symbol(LexicalUnit unit,int line,int column){
-		this(unit,line,column,NO_VALUE);
+		this(unit,line,column,NO_VALUE ,null);
 	}
 	
 	public Symbol(LexicalUnit unit,int line){
-		this(unit,line,UNDEFINED_POSITION,NO_VALUE);
+		this(unit,line,UNDEFINED_POSITION,NO_VALUE, NO_NAME);
 	}
 	
 	public Symbol(LexicalUnit unit){
-		this(unit,UNDEFINED_POSITION,UNDEFINED_POSITION,NO_VALUE);
+		this(unit,UNDEFINED_POSITION,UNDEFINED_POSITION,NO_VALUE, NO_NAME);
 	}
 	
 	public Symbol(LexicalUnit unit,Object value){
-		this(unit,UNDEFINED_POSITION,UNDEFINED_POSITION,value);
+		this(unit,UNDEFINED_POSITION,UNDEFINED_POSITION,value, NO_NAME);
 	}
+	
+	public Symbol(String name){
+		this(null, UNDEFINED_POSITION, UNDEFINED_POSITION, NO_VALUE, NO_NAME);
+	}
+
+
 
 	public boolean isTerminal(){
 		return this.type != null;
