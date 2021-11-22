@@ -13,4 +13,3 @@ begin
   endwhile ;
   print(a)
 end
-a=5

@@ -13,10 +13,19 @@ public class Parser {
     public Parser(FileReader source){
         lexer = new Lexer(source);
     }
-
+    
     public ParseTree beginParsing(){
         ParseTree parseTree = PROGRAM();
-        System.out.println(leftMostD);
+        getNextToken();
+        if (tokenUnit!=LexicalUnit.END_OF_STREAM){
+            System.err.println("Sorry but "+token.toString() + " is after lexical unit: " + LexicalUnit.END);
+            System.exit(0);
+        }
+        String correctPrint = "";
+        for (int i = 0; i<leftMostD.size(); i++){
+            correctPrint += leftMostD.get(i).toString()+ " ";
+        }
+        System.out.println(correctPrint);
         return parseTree;
     }
 
@@ -484,14 +493,9 @@ public class Parser {
         return root;
     }
 
-    // TODO rajouter le expected.
+    // TOD rajouter le expected.
     private void syntaxError(Symbol symbol){
         System.err.println("An error occured when reading the token : " + symbol.getValue());
         System.exit(1);
-    }
-
-
-    private void print(String str){
-        System.out.println(str);
     }
 }
