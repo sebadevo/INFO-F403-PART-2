@@ -14,6 +14,11 @@ public class Parser {
         lexer = new Lexer(source);
     }
     
+    /**
+     * We check if there is nothing after the last token. 
+     * We print the list of the left most derivative 
+     * @return parseTree
+     */
     public ParseTree beginParsing(){
         ParseTree parseTree = PROGRAM();
         getNextToken();
@@ -29,6 +34,10 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable Program. 
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal).  
+     */
     public ParseTree PROGRAM(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -47,6 +56,12 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable Code. 
+     * Code -> InstList
+     *      -> ε
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree CODE(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -68,16 +83,27 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable InstList. 
+     * InstList -> Instruction INSTTAIL 
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree INSTLIST() {
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(4);
         chdn.add(INSTRUCTION()); 
-        chdn.add(INSTAIL());
+        chdn.add(INSTTAIL());
         ParseTree parseTree = new ParseTree(new Symbol("InstList"), chdn);
         return parseTree;
     }
 
-    private ParseTree INSTAIL() {
+    /**
+     * It is the corresponding function of the variable INSTTAIL. 
+     * InstTail -> ; InstList
+     *          -> ε
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
+    private ParseTree INSTTAIL() {
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
         switch (tokenUnit){
@@ -88,7 +114,7 @@ public class Parser {
             case ENDFOR: 
                 addLeftMostD(6);
                 chdn.add(new ParseTree(new Symbol("$\\varepsilon$")));
-                ParseTree parseTree = new ParseTree(new Symbol("InsTail"), chdn);
+                ParseTree parseTree = new ParseTree(new Symbol("INSTTAIL"), chdn);
                 return parseTree;
             case SEMICOLON:
                 addLeftMostD(5);
@@ -99,11 +125,21 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("InsTail"), chdn);
+        ParseTree parseTree = new ParseTree(new Symbol("INSTTAIL"), chdn);
         return parseTree;
 
     }
 
+    /**
+     * It is the corresponding function of the variable Instruction. 
+     * Instruction -> If
+     *             -> While
+     *             -> Assign
+     *             -> For
+     *             -> Print
+     *             -> Read
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree INSTRUCTION() {
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -120,6 +156,11 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable If. 
+     * If -> if Cond then Code Tail
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree IF(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -139,7 +180,13 @@ public class Parser {
         ParseTree parseTree = new ParseTree(new Symbol("If"), chdn);
         return parseTree;
     }
-    
+
+    /**
+     * It is the corresponding function of the variable Tail. 
+     * Tail -> endif
+     *      -> else Code endif
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree TAIL(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -162,6 +209,11 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable While. 
+     * While -> while Cond do Code endwhile
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree WHILE(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -182,6 +234,12 @@ public class Parser {
         return parseTree;
     }
     
+    /**
+     * It is the corresponding function of the variable Cond. 
+     * Cond -> not Cond
+     *      -> SimpleCond
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree COND(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -200,6 +258,12 @@ public class Parser {
         
     }
 
+
+    /**
+     * It is the corresponding function of the variable SimpleCond. 
+     * SimpleCond -> ExprArith Comp ExprArith
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree SIMPLECOND(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(19); 
@@ -210,6 +274,13 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable Comp. 
+     * Comp -> =
+     *      -> >
+     *      -> <
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree COMP(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -234,6 +305,12 @@ public class Parser {
         return parseTree;
     }
 
+
+    /**
+     * It is the corresponding function of the variable ExprArith. 
+     * ExprArith -> A B
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree EXPRARITH(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(23);
@@ -243,6 +320,11 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable A. 
+     * A -> F
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree A(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(24);
@@ -251,6 +333,13 @@ public class Parser {
         return parseTree;
     }
 
+     /**
+     * It is the corresponding function of the variable B. 
+     * B -> + F B
+     *   -> - F B 
+     *   -> ε
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree B(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -293,6 +382,11 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable F. 
+     * F -> C D
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree F(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(28);
@@ -302,6 +396,11 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable C. 
+     * C -> G
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree C(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(29);
@@ -310,6 +409,13 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable D. 
+     * D -> * G D
+     *   -> / G D 
+     *   -> ε
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree D(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -355,6 +461,13 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable G. 
+     * G -> - G
+     *   -> ExprArith
+     *   -> H
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree G(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -379,6 +492,12 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable H. 
+     * H -> [VarName]
+     *   -> [Number]
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree H(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -399,6 +518,11 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * It is the corresponding function of the variable Assign. 
+     * Assign -> [VarName] := ExprArith
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree ASSIGN(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -417,6 +541,12 @@ public class Parser {
         ParseTree parseTree = new ParseTree(new Symbol("Assign"), chdn);
         return parseTree;
     }
+
+    /**
+     * It is the corresponding function of the variable For. 
+     * For -> for [VarName] from ExprArith by ExprArith to ExprArith do Code end for 
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree FOR(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
@@ -442,6 +572,12 @@ public class Parser {
         ParseTree parseTree = new ParseTree(new Symbol("For"), chdn);
         return parseTree;
     }
+
+    /**
+     * It is the corresponding function of the variable Print. 
+     * Print -> print( [VarName] )
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree PRINT(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(40);
@@ -452,6 +588,12 @@ public class Parser {
         ParseTree parseTree = new ParseTree(new Symbol("Print"), chdn);
         return parseTree;
     }
+
+    /**
+     * It is the corresponding function of the variable Read. 
+     * Read -> read( [VarName] )
+     * @return parseTree where the root is Program (variable) and the leaf is end (terminal). 
+     */
     private ParseTree READ(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(41);
@@ -463,10 +605,17 @@ public class Parser {
         return parseTree;
     }
 
+    /**
+     * Stores the type of the token in tokenUnit
+     */
     private void convertToken(){
         tokenUnit = token.getType();
     }
 
+    /**
+     * Adds the rule number i to the list leftMostD. 
+     * @param i
+     */
     private void addLeftMostD(int i) {
         if (leftMostD == null){
             leftMostD = new ArrayList<Integer>();
@@ -474,6 +623,9 @@ public class Parser {
         leftMostD.add(i);
     }
 
+    /**
+     * Fetches the following token if matched is null or equals to the current token. 
+     */
     private void getNextToken(){
         if (matched==null || matched.equals(token)){
             try{
@@ -486,6 +638,12 @@ public class Parser {
     
     }
 
+    /***
+     * Launches an error if the token is not what was expected. 
+     * Adds the token to the root of the parseTree. 
+     * @param expected
+     * @return root
+     */
     private ParseTree match(LexicalUnit expected){
         if (matched!=null){getNextToken();}
         if (!expected.equals(tokenUnit)){
@@ -496,7 +654,10 @@ public class Parser {
         return root;
     }
 
-    // TOD rajouter le expected.
+    /**
+     * Launches an error and interrupts the code. 
+     * @param symbol
+     */
     private void syntaxError(Symbol symbol){
         System.err.println("An error occured when reading the token : " + symbol.getValue()+" at ligne : " + symbol.getLine());
         System.exit(1);
