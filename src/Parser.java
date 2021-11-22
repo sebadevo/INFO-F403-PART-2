@@ -260,7 +260,7 @@ public class Parser {
             case SMALLER:
             case THEN:
             case DO:
-            case LPAREN:
+            case RPAREN:
             case SEMICOLON:
             case END:
             case ENDWHILE:
@@ -319,7 +319,7 @@ public class Parser {
             case SMALLER:
             case THEN:
             case DO:
-            case LPAREN:
+            case RPAREN:
             case SEMICOLON:
             case END:
             case ENDWHILE:
@@ -347,6 +347,7 @@ public class Parser {
                 chdn.add(D());
                 break;  
             default:
+                System.out.println("bonjour");
                 syntaxError(token);
                 break;
         }
@@ -401,6 +402,7 @@ public class Parser {
     private ParseTree ASSIGN(){
         ArrayList<ParseTree> chdn = new ArrayList<>();
         getNextToken();
+        
         switch(tokenUnit){
             case VARNAME:
                 addLeftMostD(38);
@@ -481,6 +483,7 @@ public class Parser {
             }
             convertToken();
         }
+    
     }
 
     private ParseTree match(LexicalUnit expected){
@@ -495,7 +498,7 @@ public class Parser {
 
     // TOD rajouter le expected.
     private void syntaxError(Symbol symbol){
-        System.err.println("An error occured when reading the token : " + symbol.getValue());
+        System.err.println("An error occured when reading the token : " + symbol.getValue()+" at ligne : " + symbol.getLine());
         System.exit(1);
     }
 }

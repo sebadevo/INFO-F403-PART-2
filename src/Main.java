@@ -3,8 +3,6 @@ import java.io.FileWriter;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-
-
 /**
  *
  * Project Part 1: Lexical Analyzer
@@ -12,7 +10,6 @@ import java.io.IOException;
  * @author Marie Van Den Bogaard, Léo Exibard, Gilles Geeraerts
  *
  */
-
 public class Main{
     /**
      *
@@ -34,10 +31,16 @@ public class Main{
             System.exit(0);
         }
 
+        /**
+         * Initialisation of the different input and ouput variables files.
+         */
         String texFile=null;
         String inputFile=null;
         FileReader source=null;
-        
+
+        /**
+         * Checks the arguments passed by command line.
+         */
         for (int i = 0; i<args.length;i++){
             if (args[i].equals("-wt")){
                 if (i+1<args.length){
@@ -55,11 +58,18 @@ public class Main{
             }
         }
 
+        /**
+         * Checks if the input file has been updated, if no then it means no input file has been sent via command line and throws
+         * an error.
+         */
         if (inputFile==null){
             System.err.println("The input file has not been set in command line.");
             System.exit(0);
         }
         
+        /**
+         * Tries to open the input file
+         */
         try{
             source = new FileReader(inputFile);
         }catch (FileNotFoundException e){

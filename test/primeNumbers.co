@@ -1,0 +1,52 @@
+CO prime numbers algorithm CO
+co All prime numbers less than the input
+
+begin
+
+  co input value
+  prime := 1; co boolean variable become false when not prime
+  TWO := 2;
+  THREE := 3;
+  read(limit);
+
+  CO 
+  Not trivial cases
+  CO
+
+  if limit > 3 then
+    co print two basic prime numbers
+    print(TWO);
+    print(THREE);
+
+    CO MAIN cODE CO
+    co step of 2 because we can ignore even numbers
+    for i from 3 by 2 to limit do 
+      for j from 3 by 2 to i do 
+        if i/j - (i/j)*j = 0 then
+          prime := 0
+        endif
+      endfor;
+
+      if prime = 1 then
+        print(i)
+      else
+        prime := 1
+      endif
+    endfor
+
+  CO 
+  Trivial cases
+  CO
+
+  else
+    if limit > 1 then
+        if limit = 2 then
+          print(TWO)
+        endif;
+        if limit = 3 then
+          print(TWO);
+          print(THREE)
+        endif
+    endif
+  endif
+end
