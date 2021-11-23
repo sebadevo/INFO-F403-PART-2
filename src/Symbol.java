@@ -58,6 +58,10 @@ public class Symbol{
 		return this.value;
 	}
 	
+	/**
+	 * 
+	 * @return the name or the type of the symbol in form of a string
+	 */
 	public String getLateXType(){
 		if(isNonTerminal()){
 			return this.name; 

@@ -7,7 +7,7 @@ public class Parser {
     private Symbol token;
     private Symbol matched;
     private LexicalUnit tokenUnit;
-    private Lexer lexer;
+    private final Lexer lexer;
     private ArrayList<Integer> leftMostD;
 
     public Parser(FileReader source){
@@ -26,9 +26,9 @@ public class Parser {
             System.err.println("Sorry but "+token.toString() + " is after lexical unit: " + LexicalUnit.END);
             System.exit(0);
         }
-        String correctPrint = "";
-        for (int i = 0; i<leftMostD.size(); i++){
-            correctPrint += leftMostD.get(i).toString()+ " ";
+        StringBuilder correctPrint = new StringBuilder();
+        for (Integer integer : leftMostD) {
+            correctPrint.append(integer.toString()).append(" ");
         }
         System.out.println(correctPrint);
         return parseTree;
@@ -52,8 +52,7 @@ public class Parser {
                 syntaxError(token); 
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("Program"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("Program"), chdn);
     }
 
     /**
@@ -73,14 +72,12 @@ public class Parser {
             case ENDFOR: 
                 addLeftMostD(3);
                 chdn.add(new ParseTree(new Symbol("$\\varepsilon$" )));
-                ParseTree parseTree = new ParseTree(new Symbol("Code"), chdn);
-                return parseTree;
+                return new ParseTree(new Symbol("Code"), chdn);
             default:      
         }
         addLeftMostD(2);
         chdn.add(INSTLIST());
-        ParseTree parseTree = new ParseTree(new Symbol("Code"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("Code"), chdn);
     }
 
     /**
@@ -93,8 +90,7 @@ public class Parser {
         addLeftMostD(4);
         chdn.add(INSTRUCTION()); 
         chdn.add(INSTTAIL());
-        ParseTree parseTree = new ParseTree(new Symbol("InstList"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("InstList"), chdn);
     }
 
     /**
@@ -114,8 +110,7 @@ public class Parser {
             case ENDFOR: 
                 addLeftMostD(6);
                 chdn.add(new ParseTree(new Symbol("$\\varepsilon$")));
-                ParseTree parseTree = new ParseTree(new Symbol("INSTTAIL"), chdn);
-                return parseTree;
+                return new ParseTree(new Symbol("INSTTAIL"), chdn);
             case SEMICOLON:
                 addLeftMostD(5);
                 chdn.add(match(LexicalUnit.SEMICOLON)); 
@@ -125,8 +120,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("INSTTAIL"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("INSTTAIL"), chdn);
 
     }
 
@@ -152,8 +146,7 @@ public class Parser {
             case READ: addLeftMostD(12); chdn.add(READ()); break;
             default:
         }
-        ParseTree parseTree = new ParseTree(new Symbol("Instruction"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("Instruction"), chdn);
     }
 
     /**
@@ -177,8 +170,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("If"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("If"), chdn);
     }
 
     /**
@@ -205,8 +197,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("Tail"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("Tail"), chdn);
     }
 
     /**
@@ -230,8 +221,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("While"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("While"), chdn);
     }
     
     /**
@@ -253,8 +243,7 @@ public class Parser {
                 addLeftMostD(18); 
                 chdn.add(SIMPLECOND());
         }
-        ParseTree parseTree = new ParseTree(new Symbol("Cond"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("Cond"), chdn);
         
     }
 
@@ -270,8 +259,7 @@ public class Parser {
         chdn.add(EXPRARITH());
         chdn.add(COMP());
         chdn.add(EXPRARITH());
-        ParseTree parseTree = new ParseTree(new Symbol("SimpleCond"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("SimpleCond"), chdn);
     }
 
     /**
@@ -301,8 +289,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("Comp"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("Comp"), chdn);
     }
 
 
@@ -316,8 +303,7 @@ public class Parser {
         addLeftMostD(23);
         chdn.add(A());
         chdn.add(B());
-        ParseTree parseTree = new ParseTree(new Symbol("ExprArith"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("ExprArith"), chdn);
     }
 
     /**
@@ -329,8 +315,7 @@ public class Parser {
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(24);
         chdn.add(F());
-        ParseTree parseTree = new ParseTree(new Symbol("A"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("A"), chdn);
     }
 
      /**
@@ -360,8 +345,7 @@ public class Parser {
             case TO: 
                 addLeftMostD(27);
                 chdn.add(new ParseTree(new Symbol("$\\varepsilon$")));
-                ParseTree parseTree = new ParseTree(new Symbol("B"), chdn);
-                return parseTree;
+                return new ParseTree(new Symbol("B"), chdn);
             case PLUS:
                 addLeftMostD(25);
                 chdn.add(match(LexicalUnit.PLUS)); 
@@ -378,8 +362,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("B"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("B"), chdn);
     }
 
     /**
@@ -392,8 +375,7 @@ public class Parser {
         addLeftMostD(28);
         chdn.add(C());
         chdn.add(D());
-        ParseTree parseTree = new ParseTree(new Symbol("F"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("F"), chdn);
     }
 
     /**
@@ -405,8 +387,7 @@ public class Parser {
         ArrayList<ParseTree> chdn = new ArrayList<>();
         addLeftMostD(29);
         chdn.add(G());
-        ParseTree parseTree = new ParseTree(new Symbol("C"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("C"), chdn);
     }
 
     /**
@@ -438,8 +419,7 @@ public class Parser {
             case MINUS:
                 addLeftMostD(32);
                 chdn.add(new ParseTree(new Symbol("$\\varepsilon$")));
-                ParseTree parseTree = new ParseTree(new Symbol("D"), chdn);
-                return parseTree;
+                return new ParseTree(new Symbol("D"), chdn);
             case TIMES:
                 addLeftMostD(30);
                 chdn.add(match(LexicalUnit.TIMES)); 
@@ -457,8 +437,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("D"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("D"), chdn);
     }
 
     /**
@@ -488,8 +467,7 @@ public class Parser {
                 chdn.add(H());
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("G"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("G"), chdn);
     }
 
     /**
@@ -514,8 +492,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("H"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("H"), chdn);
     }
 
     /**
@@ -538,8 +515,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("Assign"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("Assign"), chdn);
     }
 
     /**
@@ -569,8 +545,7 @@ public class Parser {
                 syntaxError(token);
                 break;
         }
-        ParseTree parseTree = new ParseTree(new Symbol("For"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("For"), chdn);
     }
 
     /**
@@ -584,9 +559,8 @@ public class Parser {
         chdn.add(match(LexicalUnit.PRINT));
         chdn.add(match(LexicalUnit.LPAREN)); 
         chdn.add(match(LexicalUnit.VARNAME)); 
-        chdn.add(match(LexicalUnit.RPAREN)); 
-        ParseTree parseTree = new ParseTree(new Symbol("Print"), chdn);
-        return parseTree;
+        chdn.add(match(LexicalUnit.RPAREN));
+        return new ParseTree(new Symbol("Print"), chdn);
     }
 
     /**
@@ -601,8 +575,7 @@ public class Parser {
         chdn.add(match(LexicalUnit.LPAREN)); 
         chdn.add(match(LexicalUnit.VARNAME)); 
         chdn.add(match(LexicalUnit.RPAREN));
-        ParseTree parseTree = new ParseTree(new Symbol("Read"), chdn);
-        return parseTree;
+        return new ParseTree(new Symbol("Read"), chdn);
     }
 
     /**
@@ -614,11 +587,11 @@ public class Parser {
 
     /**
      * Adds the rule number i to the list leftMostD. 
-     * @param i
+     * @param i the last rule that has been used.
      */
     private void addLeftMostD(int i) {
         if (leftMostD == null){
-            leftMostD = new ArrayList<Integer>();
+            leftMostD = new ArrayList<>();
         }
         leftMostD.add(i);
     }
@@ -641,7 +614,7 @@ public class Parser {
     /***
      * Launches an error if the token is not what was expected. 
      * Adds the token to the root of the parseTree. 
-     * @param expected
+     * @param expected The expected lexicalUnit
      * @return root
      */
     private ParseTree match(LexicalUnit expected){
@@ -656,7 +629,7 @@ public class Parser {
 
     /**
      * Launches an error and interrupts the code. 
-     * @param symbol
+     * @param symbol the symbol that generated the error.
      */
     private void syntaxError(Symbol symbol){
         System.err.println("An error occured when reading the token : " + symbol.getValue()+" at ligne : " + symbol.getLine());

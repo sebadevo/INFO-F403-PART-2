@@ -1,0 +1,14 @@
+\documentclass[border=5pt]{standalone}
+
+\usepackage{tikz}
+\usepackage{forest}
+
+\begin{document}
+
+\begin{forest}for tree={rectangle, draw, l sep=20pt}[{Program} [{BEG} ][{Code} [{InstList} [{Instruction} [{Read} [{READ} ][{LPAREN} ][{VARNAME} ][{RPAREN} ]]][{INSTTAIL} [{SEMICOLON} ][{InstList} [{Instruction} [{Read} [{READ} ][{LPAREN} ][{VARNAME} ][{RPAREN} ]]][{INSTTAIL} [{SEMICOLON} ][{InstList} [{Instruction} [{While} [{WHILE} ][{Cond} [{NOT} ][{Cond} [{SimpleCond} [{ExprArith} [{A} [{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{$\varepsilon$} ]]][{Comp} [{EQUAL} ]][{ExprArith} [{A} [{F} [{C} [{G} [{H} [{NUMBER} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{$\varepsilon$} ]]]]]][{DO} ][{Code} [{InstList} [{Instruction} [{Assign} [{VARNAME} ][{ExprArith} [{A} [{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{$\varepsilon$} ]]]]][{INSTTAIL} [{SEMICOLON} ][{InstList} [{Instruction} [{While} [{WHILE} ][{Cond} [{SimpleCond} [{ExprArith} [{A} [{F} [{C} [{G} [{LPAREN} ][{ExprArith} [{A} [{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{PLUS} ][{F} [{C} [{G} [{H} [{NUMBER} ]]]][{D} [{$\varepsilon$} ]]][{B} [{$\varepsilon$} ]]]][{RPAREN} ]]][{D} [{$\varepsilon$} ]]]][{B} [{$\varepsilon$} ]]][{Comp} [{GREATER} ]][{ExprArith} [{A} [{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{$\varepsilon$} ]]]]][{DO} ][{Code} [{InstList} [{Instruction} [{Assign} [{VARNAME} ][{ExprArith} [{A} [{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{MINUS} ][{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]][{B} [{$\varepsilon$} ]]]]]][{INSTTAIL} [{$\varepsilon$} ]]]][{ENDWHILE} ]]][{INSTTAIL} [{SEMICOLON} ][{InstList} [{Instruction} [{Assign} [{VARNAME} ][{ExprArith} [{A} [{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{$\varepsilon$} ]]]]][{INSTTAIL} [{SEMICOLON} ][{InstList} [{Instruction} [{Assign} [{VARNAME} ][{ExprArith} [{A} [{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{$\varepsilon$} ]]]]][{INSTTAIL} [{$\varepsilon$} ]]]]]]]]]][{ENDWHILE} ]]][{INSTTAIL} [{SEMICOLON} ][{InstList} [{Instruction} [{Print} [{PRINT} ][{LPAREN} ][{VARNAME} ][{RPAREN} ]]][{INSTTAIL} [{$\varepsilon$} ]]]]]]]]]][{END} ]];
+\end{forest}
+
+\end{document}
+%% Local Variables:
+%% TeX-engine: pdflatex
+%% End:

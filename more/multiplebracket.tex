@@ -1,0 +1,14 @@
+\documentclass[border=5pt]{standalone}
+
+\usepackage{tikz}
+\usepackage{forest}
+
+\begin{document}
+
+\begin{forest}for tree={rectangle, draw, l sep=20pt}[{Program} [{BEG} ][{Code} [{InstList} [{Instruction} [{Assign} [{VARNAME} ][{ExprArith} [{A} [{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{PLUS} ][{F} [{C} [{G} [{LPAREN} ][{ExprArith} [{A} [{F} [{C} [{G} [{LPAREN} ][{ExprArith} [{A} [{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]]][{B} [{PLUS} ][{F} [{C} [{G} [{H} [{VARNAME} ]]]][{D} [{$\varepsilon$} ]]][{B} [{$\varepsilon$} ]]]][{RPAREN} ]]][{D} [{TIMES} ][{G} [{H} [{VARNAME} ]]][{D} [{$\varepsilon$} ]]]]][{B} [{$\varepsilon$} ]]][{RPAREN} ]]][{D} [{$\varepsilon$} ]]][{B} [{$\varepsilon$} ]]]]]][{INSTTAIL} [{$\varepsilon$} ]]]][{END} ]];
+\end{forest}
+
+\end{document}
+%% Local Variables:
+%% TeX-engine: pdflatex
+%% End:

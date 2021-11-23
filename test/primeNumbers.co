@@ -1,6 +1,8 @@
 CO prime numbers algorithm CO
 co All prime numbers less than the input
 
+CO This test has been provided by another groupe : Aurélien Chassagne and David Silberwasser CO
+
 begin
 
   co input value
